@@ -77,7 +77,7 @@ def server_query( url, parameters=None ):
         print('the server also says: ' + e.read().decode(ENCODING))
 
 if __name__ == '__main__':
-    parameters = {'ciphertext': 'SGksIGhvdyBhcmUgeW91PyBwa2V5dXRsIC1lbmNyeXB0IC1wdWJpbiAtaW5rZXkgc2VydmVyX2tleS5w\ndWIK'}
+    parameters = {'ciphertext': 'CkbXv0IMmsENZDaa9RoVujTOhSqCiS7cFsCh5yEqt6V8j0rf1ZbZ91BAniU8hMvtsbXTwgm5Q7106mXFAi+gesQ8NVNvsfoMds0kz6rMVeuIAfbJxRDKK/7h3ACM1JFYuyq7yn93Zi6fSQpM2iXamzCcgtYtADjEFll9ToimcI3TLY4UncOSCbbwgwsJaIM+K73z7qViQfbPB34zU+so70qlAYwoLryEKUL6cmlEMpG85eyiBK6s6SnRRS7qjqMuASLteiGHGsVLUUDd0zEz3Y6wC0/cCxVVE78MRQp05G1qt/clUaK4tbOYynNtzIlio5QPO4aQzrwqbQggWM8hkA=='}
 
     response = server_query(BASE_URL + '/public-key-101/submit/sommerard', parameters)
 
