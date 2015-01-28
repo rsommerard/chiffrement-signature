@@ -77,14 +77,18 @@ def server_query( url, parameters=None ):
         print('the server also says: ' + e.read().decode(ENCODING))
 
 if __name__ == '__main__':
-    #parameters = {'ciphertext': 'CkbXv0IMmsENZDaa9RoVujTOhSqCiS7cFsCh5yEqt6V8j0rf1ZbZ91BAniU8hMvtsbXTwgm5Q7106mXFAi+gesQ8NVNvsfoMds0kz6rMVeuIAfbJxRDKK/7h3ACM1JFYuyq7yn93Zi6fSQpM2iXamzCcgtYtADjEFll9ToimcI3TLY4UncOSCbbwgwsJaIM+K73z7qViQfbPB34zU+so70qlAYwoLryEKUL6cmlEMpG85eyiBK6s6SnRRS7qjqMuASLteiGHGsVLUUDd0zEz3Y6wC0/cCxVVE78MRQp05G1qt/clUaK4tbOYynNtzIlio5QPO4aQzrwqbQggWM8hkA=='}
+    parameters = {'ciphertext': 'CkbXv0IMmsENZDaa9RoVujTOhSqCiS7cFsCh5yEqt6V8j0rf1ZbZ91BAniU8hMvtsbXTwgm5Q7106mXFAi+gesQ8NVNvsfoMds0kz6rMVeuIAfbJxRDKK/7h3ACM1JFYuyq7yn93Zi6fSQpM2iXamzCcgtYtADjEFll9ToimcI3TLY4UncOSCbbwgwsJaIM+K73z7qViQfbPB34zU+so70qlAYwoLryEKUL6cmlEMpG85eyiBK6s6SnRRS7qjqMuASLteiGHGsVLUUDd0zEz3Y6wC0/cCxVVE78MRQp05G1qt/clUaK4tbOYynNtzIlio5QPO4aQzrwqbQggWM8hkA=='}
 
-    #response = server_query(BASE_URL + '/public-key-101/submit/sommerard', parameters)
+    response = server_query(BASE_URL + '/public-key-101/submit/sommerard', parameters)
 
-    #print(response, "\n")
+    print(response, "\n")
 
-    parameters = {'public-key': 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxvFTBtqTvJK0L1l4akLHClYyT4bJ+oAQAxHqNDo9hl09UGmv+9KT3Ado2OVKrW1PxU6eOr60kPO9b3XJlbpMfmfqPFHkyO4HH/iusWRcUgkBCFwos75U8+B3ASgnofqBTjShdRDIGCWZneulBfgBNZ1A1VNFi4siGYwsoDuZ8jIxiLq9vjtY1p207XU0P0OvFKGp3hTIM01540LGzWUgLD5KQiniKPIz/9UgIkben6owI4WVRvd17EhBz6dLvBq/7B8kO6XL5rkgIEVG5Pcqq6cVxGrpmwblugfs+B2r5lE8jWktUTWzaszvbq3IcIdvSeQj9lNuU1wtRkpAhdzi4QIDAQAB' }
-
+    with open('rsa_key.pub', 'r') as file:
+        public_key = file.read()
+    
+    parameters = {'public-key': public_key}
+    print("Parameters: \n", parameters)
+    
     response = server_query(BASE_URL + '/public-key-101/query/sommerard', parameters)
 
     print(response, "\n")
