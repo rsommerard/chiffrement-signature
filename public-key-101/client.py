@@ -78,21 +78,24 @@ if __name__ == '__main__':
 
     #print(response, "\n")
 
-    with open('rsa_key.pub', 'r') as file:
-        public_key = file.read()
 
-    with open('rsa_key', 'r') as file:
-        private_key = file.read()
+    #-----------------------------------------------------------------------------
+
+    #with open('rsa_key.pub', 'r') as file:
+    #    public_key = file.read()
+
+    #with open('rsa_key', 'r') as file:
+    #    private_key = file.read()
     
-    parameters = {'public-key': public_key}
+    #parameters = {'public-key': public_key}
     #print("Parameters: \n", parameters)
     
-    response = server_query(BASE_URL + '/public-key-101/query/sommerard', parameters)
+    #response = server_query(BASE_URL + '/public-key-101/query/sommerard', parameters)
 
-    with open('response', 'w') as file:
-        file.write(response)
+    #with open('response', 'w') as file:
+    #    file.write(response)
 
-    print(response, "\n")
+    #print(response, "\n")
 
     #os.system('base64 -d response > resp_test')
 
@@ -102,3 +105,39 @@ if __name__ == '__main__':
 
     #base64 -d response > resp_b64d
     #openssl pkeyutl -decrypt -inkey rsa_key -in resp_b64d 
+
+    #-----------------------------------------------------------------------------
+
+    #openssl rand 128 | base64 > sym_128_key
+
+    # MO4f73kpRLo0L7Nk74WhQnapDfO0CIS9mOiV89JeHUIvVtSj1pMQH8+BGT2Vhoj/JPloBV++suL2
+    # UhFSILtpATq1btrntvVrTh5/D2FfpyUv6h+zEpR12E9lDZmcNAveIDW+qzYNkvvsQvqDRY3nt8lh
+    # UlVDFUcOUpN6m6puZ4E=
+
+    # openssl pkeyutl -encrypt -pubin -inkey get-PK -in sym_128_key | base64
+
+    # PH0zt0K7N/6JsWBoUypbzGPcoU0Iqn1b+TN5nWorj6vAeybdYNCUBpGOgmnl6f503QRnlrIG/td6
+    # zQ3cx90DW6VZzx51ikh44DxverUCyK9A1eGy6ols25zzSAfBZMfnH/bSqjwt/nGH8f7EigTTmrG8
+    # u3+uMNpYZfwjTLNj7jANGnU2p72xAQ6Bj/5lYM85UJMDAXOdIuAGq9KycYOfEpYccX0oXotYICz+
+    # 0oqffQuBfr2JOGCV2+5x5ekgeeuvRfJvpWgj6Q2OnGE2BvqImvdKK1ETvootd3rBp4asvtFvRD9q
+    # s0KSWeaBWNeacafWZZIIo4k5heqJD2AsPNvqHQ==
+
+    # openssl enc -aes-128-cbc -k sym_128_key -base64 -in msg2
+
+    # U2FsdGVkX18y8Zl5EbnfY8fpaygYGb+sEc4/9FzLX/whz1a9GpOAT1/ItuBidAby
+
+
+   with open('rsa_key.pub', 'r') as file:
+        public_key = file.read()
+
+   parameters = {'public-key': public_key, 'session-key': 'PH0zt0K7N/6JsWBoUypbzGPcoU0Iqn1b+TN5nWorj6vAeybdYNCUBpGOgmnl6f503QRnlrIG/td6zQ3cx90DW6VZzx51ikh44DxverUCyK9A1eGy6ols25zzSAfBZMfnH/bSqjwt/nGH8f7EigTTmrG8u3+uMNpYZfwjTLNj7jANGnU2p72xAQ6Bj/5lYM85UJMDAXOdIuAGq9KycYOfEpYccX0oXotYICz+0oqffQuBfr2JOGCV2+5x5ekgeeuvRfJvpWgj6Q2OnGE2BvqImvdKK1ETvootd3rBp4asvtFvRD9qs0KSWeaBWNeacafWZZIIo4k5heqJD2AsPNvqHQ=='}
+
+   response = server_query(BASE_URL + '/public-key-101/hybrid/sommerard', parameters)
+
+   print(response, "\n")
+
+   with open('hybrid_ciphertext', 'w') as file:
+       file.write(response['ciphertext'])
+
+   with open('hybrid_session_key', 'w') as file:
+       file.write(response['session-key'])
