@@ -5,6 +5,7 @@ import urllib.error
 import json
 import time
 import subprocess
+import os
 
 ### adresse du serveur de TP
 BASE_URL = "http://pac.bouillaguet.info/TP1"
@@ -13,31 +14,25 @@ ENCODING = 'utf-8'
 class DecryptionError(Exception):
     pass
 
-def enc(msg, cipher="aes-128-cbc", passphrase=None, base64=True, decrypt=False):
-    """invoke the OpenSSL library (though the openssl executable which must be
-       present on your system to encrypt or decrypt content using a symmetric cipher.
+#pkfn: PubKeyFileName
+#fnte: FileNameToEncrypt
+#def enc(pkfn, fnte):
+#    cmd = ["openssl", "pkeyutl", "-encrypt", "-pubin", "-inkey " + pkfn, "-in " + fnte]
+#    result = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#    stdout, stderr = result.communicate()
+#    if stderr == "bad decrypt\n":
+#        raise DecryptionError()
+#    return stdout.decode(ENCODING)
 
-       # encryption use
-       >>> c = enc("toto", passphrase="foobar")
-
-       # decryption use
-       >>> enc(c, passphrase="foobar", decrypt=True)
-       'toto'
-       """
-
-    args = ["openssl", "enc", "-" + cipher]
-    if base64:
-        args.append("-base64")
-    if passphrase:
-        args.append("-k")
-        args.append(passphrase)
-    if decrypt:
-        args.append('-d')
-    result = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = result.communicate(msg.encode(ENCODING))
-    if stderr == "bad decrypt\n":
-        raise DecryptionError()
-    return stdout.decode(ENCODING)
+#pkfn: PrivateKeyFileName
+#fntd: FileNameToDecrypt
+#def dec(pkfn, fntd):
+#    cmd = ["openssl", "pkeyutl", "-decrypt", "-inkey " + pkfn, "-in " + fntd]
+#    result = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#    stdout, stderr = result.communicate()
+#    if stderr == "bad decrypt\n":
+#        raise DecryptionError()
+#    return stdout.decode(ENCODING)
 
 def server_query( url, parameters=None ):
      """Charge l'url demandÃ©e. Si aucun paramÃ¨tre n'est spÃ©cifiÃ©, une requÃªte
@@ -77,18 +72,33 @@ def server_query( url, parameters=None ):
         print('the server also says: ' + e.read().decode(ENCODING))
 
 if __name__ == '__main__':
-    parameters = {'ciphertext': 'CkbXv0IMmsENZDaa9RoVujTOhSqCiS7cFsCh5yEqt6V8j0rf1ZbZ91BAniU8hMvtsbXTwgm5Q7106mXFAi+gesQ8NVNvsfoMds0kz6rMVeuIAfbJxRDKK/7h3ACM1JFYuyq7yn93Zi6fSQpM2iXamzCcgtYtADjEFll9ToimcI3TLY4UncOSCbbwgwsJaIM+K73z7qViQfbPB34zU+so70qlAYwoLryEKUL6cmlEMpG85eyiBK6s6SnRRS7qjqMuASLteiGHGsVLUUDd0zEz3Y6wC0/cCxVVE78MRQp05G1qt/clUaK4tbOYynNtzIlio5QPO4aQzrwqbQggWM8hkA=='}
+    #parameters = {'ciphertext': 'CkbXv0IMmsENZDaa9RoVujTOhSqCiS7cFsCh5yEqt6V8j0rf1ZbZ91BAniU8hMvtsbXTwgm5Q7106mXFAi+gesQ8NVNvsfoMds0kz6rMVeuIAfbJxRDKK/7h3ACM1JFYuyq7yn93Zi6fSQpM2iXamzCcgtYtADjEFll9ToimcI3TLY4UncOSCbbwgwsJaIM+K73z7qViQfbPB34zU+so70qlAYwoLryEKUL6cmlEMpG85eyiBK6s6SnRRS7qjqMuASLteiGHGsVLUUDd0zEz3Y6wC0/cCxVVE78MRQp05G1qt/clUaK4tbOYynNtzIlio5QPO4aQzrwqbQggWM8hkA=='}
 
-    response = server_query(BASE_URL + '/public-key-101/submit/sommerard', parameters)
+    #response = server_query(BASE_URL + '/public-key-101/submit/sommerard', parameters)
 
-    print(response, "\n")
+    #print(response, "\n")
 
     with open('rsa_key.pub', 'r') as file:
         public_key = file.read()
+
+    with open('rsa_key', 'r') as file:
+        private_key = file.read()
     
     parameters = {'public-key': public_key}
-    print("Parameters: \n", parameters)
+    #print("Parameters: \n", parameters)
     
     response = server_query(BASE_URL + '/public-key-101/query/sommerard', parameters)
 
+    with open('response', 'w') as file:
+        file.write(response)
+
     print(response, "\n")
+
+    #os.system('base64 -d response > resp_test')
+
+    #msg_dec = dec('rsa_key', 'resp_test')
+
+    #print(msg_dec)
+
+    #base64 -d response > resp_b64d
+    #openssl pkeyutl -decrypt -inkey rsa_key -in resp_b64d 
