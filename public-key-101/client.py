@@ -81,30 +81,29 @@ if __name__ == '__main__':
 
     #-----------------------------------------------------------------------------
 
-    #with open('rsa_key.pub', 'r') as file:
-    #    public_key = file.read()
+"""
+    with open('rsa_key.pub', 'r') as file:
+        public_key = file.read()
 
-    #with open('rsa_key', 'r') as file:
-    #    private_key = file.read()
+    with open('rsa_key', 'r') as file:
+        private_key = file.read()
     
-    #parameters = {'public-key': public_key}
-    #print("Parameters: \n", parameters)
+    parameters = {'public-key': public_key}
+    print("Parameters: \n", parameters)
     
-    #response = server_query(BASE_URL + '/public-key-101/query/sommerard', parameters)
+    response = server_query(BASE_URL + '/public-key-101/query/sommerard', parameters)
 
-    #with open('response', 'w') as file:
-    #    file.write(response)
+    with open('response', 'w') as file:
+        file.write(response)
 
-    #print(response, "\n")
-
-    #os.system('base64 -d response > resp_test')
-
-    #msg_dec = dec('rsa_key', 'resp_test')
-
-    #print(msg_dec)
+    print(response, "\n")
 
     #base64 -d response > resp_b64d
     #openssl pkeyutl -decrypt -inkey rsa_key -in resp_b64d 
+
+    # /public-key-101/magic/53616C7465645F5F38979F37A28738996ADCB33950DF1C7BEBA9784E5AED39EE
+
+"""
 
     #-----------------------------------------------------------------------------
 
