@@ -34,7 +34,7 @@ if __name__ == '__main__':
     # echo "Hi, how are you?" > msg2send
     # openssl pkeyutl -encrypt -pubin -inkey server_public_key -in msg2send | base64 > msg2send_enc
     
-    with open('msg2send_enc', 'r') as file:
+    """with open('msg2send_enc', 'r') as file:
         msg2send_enc = file.read()
 
     parameters = {'ciphertext': msg2send_enc}
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     with open('response_dec', 'r') as file:
         response_dec = file.read()
 
-    print(response_dec, "\n")
+    print(response_dec, "\n")"""
 
     #-----------------------------------------------------------------------------
 
@@ -99,9 +99,6 @@ if __name__ == '__main__':
 
     response = server_query(BASE_URL + '/public-key-101/hybrid/sommerard', parameters)
 
-    with open('response_ciphertext_enc_b64', 'w') as file:
-       file.write(response['ciphertext'])
-
     with open('response_sessionkey_enc_b64', 'w') as file:
        file.write(response['session-key'])
 
@@ -111,16 +108,22 @@ if __name__ == '__main__':
     # openssl pkeyutl -decrypt -inkey my_private_key -in response_sessionkey_enc -out response_sessionkey_dec
     os.system("openssl pkeyutl -decrypt -inkey my_private_key -in response_sessionkey_enc -out response_sessionkey_dec")
 
-    with open('response_sessionkey_dec', 'r') as file:
-        response_sessionkey_dec = file.read()
+    # base64 response_sessionkey_dec > response_sessionkey_dec_b64
+    os.system("base64 response_sessionkey_dec > response_sessionkey_dec_b64")
 
-    print(response_sessionkey_dec, "\n")
+    with open('response_sessionkey_dec_b64', 'r') as file:
+        response_sessionkey_dec_b64 = file.read()
+
+    print(response_sessionkey_dec_b64, "\n")
+
+    with open('response_ciphertext_enc_b64', 'w') as file:
+       file.write(response['ciphertext'])
 
     # base64 -d response_ciphertext_enc_b64 > response_ciphertext_enc
     os.system("base64 -d response_ciphertext_enc_b64 > response_ciphertext_enc")
 
-    # openssl enc -aes-128-cbc -k K -base64 -in msg2send > ciphertext2send
-    os.system("openssl pkeyutl -decrypt -inkey my_private_key -in response_ciphertext_enc -out response_ciphertext_dec")
+    # openssl enc -aes-128-cbc -k response_sessionkey_dec_b64 -base64 -in msg2send > ciphertext2send
+    os.system("openssl enc -aes-128-cbc -d -base64 -k response_sessionkey_dec_b64 -in response_ciphertext_enc_b64 > response_ciphertext_dec")
 
     with open('response_ciphertext_dec', 'r') as file:
         response_ciphertext_dec = file.read()
