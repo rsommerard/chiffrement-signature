@@ -81,21 +81,13 @@ if __name__ == '__main__':
     # openssl pkeyutl -encrypt -pubin -inkey server_public_key -in K | base64 > sessionkey2send
     os.system('openssl pkeyutl -encrypt -pubin -inkey server_public_key -in K | base64 > sessionkey2send')
 
-    # openssl enc -aes-128-cbc -k K -base64 -in msg2send > ciphertext2send
-    os.system('openssl enc -aes-128-cbc -k K -base64 -in msg2send > ciphertext2send')
-
-    # U2FsdGVkX18y8Zl5EbnfY8fpaygYGb+sEc4/9FzLX/whz1a9GpOAT1/ItuBidAby
-
     with open('sessionkey2send', 'r') as file:
         sessionkey2send = file.read()
-
-    with open('ciphertext2send', 'r') as file:
-        ciphertext2send = file.read()
 
     with open('my_public_key', 'r') as file:
         my_public_key = file.read()
 
-    parameters = {'public-key': my_public_key, 'session-key': sessionkey2send, 'ciphertext': ciphertext2send}
+    parameters = {'public-key': my_public_key, 'session-key': sessionkey2send}
 
     response = server_query(BASE_URL + '/public-key-101/hybrid/sommerard', parameters)
 
@@ -108,24 +100,29 @@ if __name__ == '__main__':
     # openssl pkeyutl -decrypt -inkey my_private_key -in response_sessionkey_enc -out response_sessionkey_dec
     os.system("openssl pkeyutl -decrypt -inkey my_private_key -in response_sessionkey_enc -out response_sessionkey_dec")
 
-    # base64 response_sessionkey_dec > response_sessionkey_dec_b64
-    os.system("base64 response_sessionkey_dec > response_sessionkey_dec_b64")
-
-    with open('response_sessionkey_dec_b64', 'r') as file:
-        response_sessionkey_dec_b64 = file.read()
-
-    print(response_sessionkey_dec_b64, "\n")
-
     with open('response_ciphertext_enc_b64', 'w') as file:
        file.write(response['ciphertext'])
 
     # base64 -d response_ciphertext_enc_b64 > response_ciphertext_enc
     os.system("base64 -d response_ciphertext_enc_b64 > response_ciphertext_enc")
 
-    # openssl enc -aes-128-cbc -k response_sessionkey_dec_b64 -base64 -in msg2send > ciphertext2send
-    os.system("openssl enc -aes-128-cbc -d -base64 -k response_sessionkey_dec_b64 -in response_ciphertext_enc_b64 > response_ciphertext_dec")
+    # openssl enc -aes-128-cbc -d -kfile response_sessionkey_dec -in response_ciphertext_enc > response_ciphertext_dec
+    os.system("openssl enc -aes-128-cbc -d -kfile response_sessionkey_dec -in response_ciphertext_enc > response_ciphertext_dec")
 
     with open('response_ciphertext_dec', 'r') as file:
         response_ciphertext_dec = file.read()
 
-    print(response_ciphertext_dec, "\n")
+    # openssl enc -aes-128-cbc -kfile response_sessionkey_dec -in msg2send2 > msg2send2_enc
+    os.system("openssl enc -aes-128-cbc -kfile response_sessionkey_dec -in msg2send2 > msg2send2_enc")
+
+    # base64 msg2send2_enc > msg2send2_enc_b64
+    os.system("base64 msg2send2_enc > msg2send2_enc_b64")
+
+    with open('msg2send2_enc_b64', 'r') as file:
+        msg2send2_enc_b64 = file.read()
+
+    parameters = {'ciphertext': msg2send2_enc_b64}
+
+    response = server_query(BASE_URL + '/public-key-101/validate', parameters)
+
+    print(response)
