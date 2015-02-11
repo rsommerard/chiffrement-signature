@@ -44,15 +44,15 @@ if __name__ == '__main__':
 
     print(response, "\n")"""
 
-    with open('sommerard_signed_by_owczarek.sign', 'r') as file:
-        sommerard_signed_by_owczarek = file.read()
+    with open('sommerard_signed_by_duthoit.sign', 'r') as file:
+        sommerard_signed_by_duthoit = file.read()
 
-    #os.system('openssl pkeyutl -sign -inkey secret_key.pem -in sommerard_signed_by_owczarek.sign | base64 > sommerard_signed_by_owczarek_signed.sign')
+    #os.system('openssl pkeyutl -sign -inkey secret_key.pem -in sommerard_signed_by_duthoit.sign | base64 > sommerard_signed_by_duthoit_signed.sign')
 
-    with open('sommerard_signed_by_owczarek_signed.sign', 'r') as file:
-        sommerard_signed_by_owczarek_signed = file.read()
+    with open('sommerard_signed_by_duthoit_signed.sign', 'r') as file:
+        sommerard_signed_by_duthoit_signed = file.read()
 
-    parameters = {"signer": "owczarek", "signature": sommerard_signed_by_owczarek, "auth": sommerard_signed_by_owczarek_signed}
+    parameters = {"signer": "duthoit", "signature": sommerard_signed_by_duthoit, "auth": sommerard_signed_by_duthoit_signed}
 
     response = server_query(BASE_URL + '/web-of-trust/sign/sommerard', parameters)
 
