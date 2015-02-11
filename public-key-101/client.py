@@ -112,16 +112,28 @@ if __name__ == '__main__':
     with open('response_ciphertext_dec', 'r') as file:
         response_ciphertext_dec = file.read()
 
-    # openssl enc -aes-128-cbc -kfile response_sessionkey_dec -in msg2send2 > msg2send2_enc
-    os.system("openssl enc -aes-128-cbc -kfile response_sessionkey_dec -in msg2send2 > msg2send2_enc")
+    print(response_ciphertext_dec)
 
-    # base64 msg2send2_enc > msg2send2_enc_b64
+    
+
+
+    os.system("openssl rand 128 | base64 > K2")
+
+    os.system('openssl pkeyutl -encrypt -pubin -inkey server_public_key -in K2 | base64 > sessionkey2send2')
+
+    os.system("openssl enc -aes-128-cbc -kfile K2 -in msg2send2 > msg2send2_enc")
+
     os.system("base64 msg2send2_enc > msg2send2_enc_b64")
 
     with open('msg2send2_enc_b64', 'r') as file:
         msg2send2_enc_b64 = file.read()
 
-    parameters = {'ciphertext': msg2send2_enc_b64}
+    with open('sessionkey2send2', 'r') as file:
+        sessionkey2send2 = file.read()
+
+    print(sessionkey2send2)
+
+    parameters = {'session-key': sessionkey2send2, 'ciphertext': msg2send2_enc_b64}
 
     response = server_query(BASE_URL + '/public-key-101/validate', parameters)
 

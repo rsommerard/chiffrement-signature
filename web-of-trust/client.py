@@ -27,7 +27,7 @@ def server_query( url, parameters=None ):
         print('the server also says: ' + e.read().decode(ENCODING))
 
 if __name__ == '__main__':
-    with open('public_key.pem', 'r') as file:
+    """with open('public_key.pem', 'r') as file:
         public_key = file.read()
 
     with open('secret_key.pem', 'r') as file:
@@ -41,6 +41,20 @@ if __name__ == '__main__':
     parameters = {'public-key': public_key, 'auth': signed_key}
 
     response = server_query(BASE_URL + '/web-of-trust/put/sommerard', parameters)
+
+    print(response, "\n")"""
+
+    with open('b64', 'r') as file:
+        sommerard_signed_by_echallier = file.read()
+
+    #os.system('openssl pkeyutl -sign -inkey secret_key.pem -in sommerard_signed_by_duthoit.sign | base64 > sign')
+
+    with open('sign', 'r') as file:
+        signed_key_echallier = file.read()
+
+    parameters = {"signer": "owczarek", "signature": "MEQCIC9obYAbmsXaQFMETIqMpz15t2AaydhtB00VhNur6jFYAiA0SCqoCsGPYFrQMZc5orRMalC4VPj6/+YZ1umb1NcrFw==", "auth": "MEUCIQCCiZD5HJRuVx6zpUIUznBcm0YddkkS2wQ9ZYn7Zgv59QIgOcEzcR2WPZilS7b+jcVARb/dQ4GCkgU1ZpTnYujpkoQ="}
+
+    response = server_query(BASE_URL + '/web-of-trust/sign/sommerard', parameters)
 
     print(response, "\n")
 
