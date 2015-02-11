@@ -44,17 +44,16 @@ if __name__ == '__main__':
 
     print(response, "\n")"""
 
-    with open('b64', 'r') as file:
-        sommerard_signed_by_echallier = file.read()
+    with open('sommerard_signed_by_owczarek.sign', 'r') as file:
+        sommerard_signed_by_owczarek = file.read()
 
-    #os.system('openssl pkeyutl -sign -inkey secret_key.pem -in sommerard_signed_by_duthoit.sign | base64 > sign')
+    #os.system('openssl pkeyutl -sign -inkey secret_key.pem -in sommerard_signed_by_owczarek.sign | base64 > sommerard_signed_by_owczarek_signed.sign')
 
-    with open('sign', 'r') as file:
-        signed_key_echallier = file.read()
+    with open('sommerard_signed_by_owczarek_signed.sign', 'r') as file:
+        sommerard_signed_by_owczarek_signed = file.read()
 
-    parameters = {"signer": "owczarek", "signature": "MEQCIC9obYAbmsXaQFMETIqMpz15t2AaydhtB00VhNur6jFYAiA0SCqoCsGPYFrQMZc5orRMalC4VPj6/+YZ1umb1NcrFw==", "auth": "MEUCIQCCiZD5HJRuVx6zpUIUznBcm0YddkkS2wQ9ZYn7Zgv59QIgOcEzcR2WPZilS7b+jcVARb/dQ4GCkgU1ZpTnYujpkoQ="}
+    parameters = {"signer": "owczarek", "signature": sommerard_signed_by_owczarek, "auth": sommerard_signed_by_owczarek_signed}
 
     response = server_query(BASE_URL + '/web-of-trust/sign/sommerard', parameters)
 
     print(response, "\n")
-
